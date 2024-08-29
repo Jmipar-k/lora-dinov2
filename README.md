@@ -80,7 +80,7 @@ train, val sets will be used for training, test will be used for evaluation.
 
 **--size** : Model size of the ViT encoder you would like to use (small, base, large, giant)
 
-**--img_dim** : The height and weight(spatial size) input(training) images will be resized into (before getting pachified)
+**--img_dim** : The height and weight(spatial size) input(training) images will be resized into (before getting pachified) **!MUST BE DIVISIBLE BY 14!**
 
 **--epochs** : Number of epochs to be trained
 
