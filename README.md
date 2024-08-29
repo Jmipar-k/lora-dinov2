@@ -33,16 +33,44 @@ Each split(train, val, test) folder should have directories named by index numbe
 
 For example, my data folder looks like this.
 
-![image](https://github.com/user-attachments/assets/d835f9aa-b034-4aa8-9543-784ea9dc4025)
+CBNU_Medical/
+├── train/
+│   ├── 0/
+│   │   └── image1.png
+│   │   └── image2.png
+│   │   └── image3.png
+│   │   └── ...
+│   ├── 1/
+│   ├── 2/
+│   ├── 3/
+├── val/
+│   ├── 0/
+│   │   └── image1.png
+│   │   └── image2.png
+│   │   └── image3.png
+│   │   └── ...
+│   ├── 1/
+│   ├── 2/
+│   ├── 3/
+└── test/
+    ├── 0/
+    │   └── image1.png
+    │   └── image2.png
+    │   └── image3.png
+    │   └── ...
+    ├── 1/
+    ├── 2/
+    ├── 3/
 
+My root folder is /CBNU_Medical,
 
-My root folder is /DGU_Medical/dataset_initial,
-
-The splits are train, val, test, and they have 4 sub directories(My Dataset includes 4 classes)
+The splits are train/val/test and they have 4 sub directories (My Custom Dataset includes 4 classes)
 
 The name of each directory will be the class label (0, 1, 2, 3).
 
 They are composed of .png images.
+
+train, val sets will be used for training, test will be used for evaluation.
 
 ## Training
 ### Hyperparameters
