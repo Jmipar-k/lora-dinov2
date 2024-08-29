@@ -33,6 +33,7 @@ Each split(train, val, test) folder should have directories named by index numbe
 
 For example, my data folder looks like this.
 
+```
 CBNU_Medical/
 ├── train/
 │   ├── 0/
@@ -61,6 +62,7 @@ CBNU_Medical/
     ├── 1/
     ├── 2/
     ├── 3/
+```
 
 My root folder is /CBNU_Medical,
 
