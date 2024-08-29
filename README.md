@@ -2,7 +2,7 @@
 A repo for fine-tuning DINOv2 using LoRA layers for multi-class classification
 
 ## Setup Conda Environment
-I recommend using conda for setting up environments!
+Using conda for environmental setup is recommended!
 
 ```bash
 # Clone this repository into current path
