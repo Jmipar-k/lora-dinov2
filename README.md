@@ -7,10 +7,13 @@ I recommend using conda for setting up environments!
 ```bash
 # Clone this repository into current path
 git clone https://github.com/Jmipar-k/lora-dinov2.git
+
 # Getting into the cloned repo
 cd lora-dinov2
+
 # Creating conda environment and installing necessary packages
 conda env create -f environment.yml
+
 # Activating created environment!
 conda activate lora-dinov2
 ```
