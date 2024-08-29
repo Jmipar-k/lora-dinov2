@@ -16,20 +16,11 @@ conda activate lora-dinov2
 ```
 
 ## Preparing Custom Dataset
-The dataset should be organized like
-
-1. /"Your_Dataset"
-
-1-1. /"Your_Dataset"/train
-
-1-2. /"Your_Dataset"/val
-
-1-3. /"Your_Dataset"/test
+The dataset should have a root folder, split folders, class folders, images.
 
 The root folder("Your_Dataset") should have train, val, test(optional for training) respectively.
 
-Each split(train, val, test) folder should have directories named by index numbers of each class included in your custom dataset.
-
+Each split(train, val, test) folder should have subdirectories named by index numbers of each class included in your custom dataset.
 
 For example, my data folder looks like this.
 
