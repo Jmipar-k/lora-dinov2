@@ -70,27 +70,28 @@ train, val sets will be used for training, test will be used for evaluation.
 
 ## Training
 ### Hyperparameters
-**--exp_name** : Name of experiment, this name will be used for trained weight saving or wandb logging(run name)
 
-**--dataset** : Do not change this from "custom"
+- ```--exp_name``` : Name of experiment, this name will be used for trained weight saving or wandb logging(run name)
 
-**--custom_dataset_path** : "path to the root directory of your custom dataset"
+- ```--dataset``` : Do not change this from "custom"
 
-**--use_lora** : For using lora layers for fine-tuning (Storngly recommended to keep it on)
+- ```--custom_dataset_path``` : "path to the root directory of your custom dataset"
 
-**--size** : Model size of the ViT encoder you would like to use (small, base, large, giant)
+- ```--use_lora``` : For using lora layers for fine-tuning (Storngly recommended to keep it on)
 
-**--img_dim** : The height and weight(spatial size) input(training) images will be resized into (before getting pachified) **!MUST BE DIVISIBLE BY 14!**
+- ```--size``` : Model size of the ViT encoder you would like to use (small, base, large, giant)
 
-**--epochs** : Number of epochs to be trained
+- ```--img_dim``` : The height and weight(spatial size) input(training) images will be resized into (before getting pachified) **!MUST BE DIVISIBLE BY 14(patch size)!**
 
-**--batch_size** : Training batch size
+- ```--epochs``` : Number of epochs to be trained
 
-**--lr** : learning rate
+- ```--batch_size``` : Training batch size
 
-**--r** : Number of rank for LoRA layers
+- ```--lr``` : learning rate
 
-**--use_amp** : Turns on mixed precision training (amp, fp16)
+- ```--r``` : Number of rank for LoRA layers
+
+- ```--use_amp``` : Turns on mixed precision training (amp, fp16)
 
 ### Training Commands
 
