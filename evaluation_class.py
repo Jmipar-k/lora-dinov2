@@ -1,4 +1,3 @@
-# Code for evaluating on test dataset
 import argparse
 
 import torch
@@ -7,7 +6,7 @@ from torch.utils.data import DataLoader
 
 from dino_finetune import (
     DINOV2EncoderLoRA,
-    get_dataloader_for_evaluation,
+    get_dataloaders_for_all_classes
 )
 
 def evaluate(
@@ -15,35 +14,51 @@ def evaluate(
     test_loader: DataLoader,
     metrics: dict,
 ) -> None:
-    test_acc = 0.0
+    
+    correct_accumulated = 0
+    samples_accumulated = 0
 
     dino_lora.eval()
-    with torch.no_grad():
-        for images, labels in test_loader:
-            images = images.float().cuda()
-            labels = labels.long().cuda()
 
-            logits = dino_lora(images)
+    for class_label, classloader in test_loader.items():
+        test_acc = 0.0
+        correct_predictions = 0
+        with torch.no_grad():
+            for images, labels in classloader:
+                images = images.float().cuda()
+                for label in labels:
+                    if class_label == label:
+                        labels = labels.long().cuda()
+                    else:
+                        print('ERROR: Label Mismatch!')
+                        return -1
 
-            predicted_classes = torch.argmax(logits, dim=1)
-            correct_predictions = (predicted_classes == labels).sum().item()
-            acc = correct_predictions / len(labels) * 100
-            test_acc += acc
+                logits = dino_lora(images)
+                
+                predicted_classes = torch.argmax(logits, dim=1)
+                correct_predictions = (predicted_classes == labels).sum().item()
+                
+                acc = correct_predictions / len(labels) * 100
+                test_acc += acc
 
-    metrics["test_acc"].append(test_acc / len(test_loader))
+                correct_accumulated += correct_predictions
+                samples_accumulated += len(labels)
+
+        metrics[f"test_acc{class_label}"].append(test_acc / len(classloader))
+    metrics[f"total_acc"].append(float(correct_accumulated / samples_accumulated) * 100)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Experiment Configuration")
     parser.add_argument(
         "--r",
         type=int,
-        default=3,
+        default=16,
         help="loRA rank parameter r",
     )
     parser.add_argument(
         "--size",
         type=str,
-        default="small",
+        default="base",
         help="DINOv2 backbone parameter [small, base, large, giant]",
     )
     parser.add_argument(
@@ -55,20 +70,20 @@ if __name__ == "__main__":
     parser.add_argument(
         "--use_fpn",
         action="store_true",
-        default=False,
-        help="True -> Use the FPN decoder for finetuning, False -> Classification(Linear) Head(decoder) for fine-tuning",
+        help="Use the FPN decoder for finetuning",
     )
     parser.add_argument(
         "--img_dim",
         type=int,
         nargs=2,
         default=(490, 490),
-        help="Images will be resized into dimensions (height width)",
+        help="Image dimensions (height width)",
     )
     parser.add_argument(
         "--lora_weights",
         type=str,
-        default=None,
+        # default='./output/lora_226.pt',
+        default='./output/lora_1e-4_r16_84.pt',
         help="Load the LoRA weights from file location",
     )
     # Training parameters
@@ -76,7 +91,7 @@ if __name__ == "__main__":
         "--dataset",
         type=str,
         default="custom",
-        help="The dataset to finetune on, `custom` ",
+        help="The dataset to finetune on, either `voc` or `ade20k` or `custom` ",
     )
     parser.add_argument(
         "--custom_dataset_path",
@@ -87,7 +102,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--batch_size",
         type=int,
-        default=32,
+        default=16,
         help="Finetuning batch size",
     )
     config = parser.parse_args()
@@ -133,14 +148,22 @@ if __name__ == "__main__":
     dino_lora.load_parameters(config.lora_weights)
 
     metrics = {
-        "test_acc": [],
+        f"test_acc{i}": [] for i in range(config.n_classes)
     }
+    metrics["total_acc"] = []
 
-    test_loader = get_dataloader_for_evaluation(
-        config.dataset, img_dim=config.img_dim, batch_size=config.batch_size
+    test_loader = get_dataloaders_for_all_classes(
+        root_dir="/home/work/jmpark/DGU_Medical/dataset_initial",
+        img_dim=(490, 490),
+        batch_size=16,
+        corruption_severity=None,
+        split="test" # Change this part to the split you want to evaluate on (ex. val, test etc.)
     )
 
     print("Calculating Accuracy...")
     evaluate(dino_lora, test_loader, metrics)
     print("Done!")
-    print(f'Test Accuracy : {metrics["test_acc"]}%')
+    print("Test Accuracy:")
+    for i in range(config.n_classes):
+        print(f"Class {i}: {metrics[f'test_acc{i}']}%")
+    print(f"Total Accuracy: {metrics['total_acc']}%")

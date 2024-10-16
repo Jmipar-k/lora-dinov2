@@ -1,4 +1,4 @@
-name: dino
+name: lora-dinov2
 channels:
   - defaults
 dependencies:

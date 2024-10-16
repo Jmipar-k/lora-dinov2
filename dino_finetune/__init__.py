@@ -6,8 +6,7 @@ from dino_finetune.corruption import get_corruption_transforms
 from dino_finetune.visualization import visualize_overlay
 from dino_finetune.metrics import compute_iou_metric
 from dino_finetune.custom_data import get_dataloader
-from dino_finetune.custom_data import get_dataloader_for_evaluation
-# from dino_finetune.data import get_dataloader
+from dino_finetune.custom_data import get_dataloaders_for_all_classes
 
 __all__ = [
     "LoRA",
@@ -15,7 +14,7 @@ __all__ = [
     "LinearClassifier",
     "FPNDecoder",
     "get_dataloader",
-    "get_dataloader_for_evaluation",
+    "get_dataloaders_for_all_classes",
     "visualize_overlay",
     "compute_iou_metric",
     "get_corruption_transforms",

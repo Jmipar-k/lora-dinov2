@@ -6,7 +6,6 @@ import wandb
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
 from torch.cuda.amp import autocast, GradScaler
 from torch.utils.data import DataLoader
@@ -178,7 +177,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--r",
         type=int,
-        default=3,
+        default=4,
         help="loRA rank parameter r",
     )
     parser.add_argument(
