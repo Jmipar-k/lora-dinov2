@@ -156,7 +156,6 @@ if __name__ == "__main__":
         root_dir="/home/work/jmpark/DGU_Medical/dataset_initial",
         img_dim=(490, 490),
         batch_size=16,
-        corruption_severity=None,
         split="test" # Change this part to the split you want to evaluate on (ex. val, test etc.)
     )
 
