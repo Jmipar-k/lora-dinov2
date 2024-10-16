@@ -89,7 +89,7 @@ train, val sets will be used for training, test will be used for evaluation.
 
 - ```--lr``` : learning rate
 
-- ```--r``` : Number of rank for LoRA layers
+- ```--r``` : Number of rank for LoRA layers. (According to LoRA Paper, **recommended values are 1, 2, 4, 8**)
 
 - ```--use_amp``` : Turns on mixed precision training (amp, fp16)
 
@@ -114,6 +114,7 @@ CUDA_VISIBLE_DEVICES=0 python main.py --exp_name base_1e-4_50epochs_r6 --dataset
 ```bash
 CUDA_VISIBLE_DEVICES=0 python main.py --dataset custom --custom_dataset_path "path to the root directory of your custom dataset" --lora_weights "path to the trained lora weights"--use_lora --size base --img_dim 490 490 --epochs 50 --batch_size 16 -r 3
 ```
+This will print the accuracy of each class sequentially, then print the total accuracy at last.
 
 ## References
 This code was heavily based on https://github.com/RobvanGastel/dinov2-finetune .
