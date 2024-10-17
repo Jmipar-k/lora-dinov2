@@ -98,4 +98,3 @@ dependencies:
     - typing-extensions==4.12.2
     - urllib3==2.2.2
     - wandb==0.17.7
-prefix: /home/work/.server_default/anaconda3/envs/dino
