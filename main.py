@@ -16,6 +16,26 @@ from dino_finetune import (
     visualize_overlay,
 )
 
+def set_random_seed(seed):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+
+def print_trainable_parameters(model):
+    trainable_params = 0
+    all_params = 0
+    for name, param in model.named_parameters():
+        num_params = param.numel()
+        all_params += num_params
+        if param.requires_grad:
+            trainable_params += num_params
+    print(
+        f"Trainable params: {trainable_params} || All params: {all_params} || "
+        f"Trainable%: {100 * trainable_params / all_params:.2f}%"
+    )
+    return trainable_params, all_params
+
 def validate_epoch(
     dino_lora: nn.Module,
     val_loader: DataLoader,
@@ -57,12 +77,16 @@ def finetune_dino(config: argparse.Namespace, encoder: nn.Module):
 
     if config.lora_weights:
         dino_lora.load_parameters(config.lora_weights)
-
+    
+    # Verify Trainable Parameters
+    print('DINOv2-LoRA Trainable Parameters')
+    print_trainable_parameters(dino_lora)
+    
     train_loader, val_loader = get_dataloader(
         config.dataset, img_dim=config.img_dim, batch_size=config.batch_size
     )
 
-    # Finetuning for segmentation
+    # Finetuning for Classification
     criterion = nn.CrossEntropyLoss().cuda()
     optimizer = optim.AdamW(dino_lora.parameters(), lr=config.lr)
     if config.use_amp:
@@ -163,6 +187,7 @@ def finetune_dino(config: argparse.Namespace, encoder: nn.Module):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Experiment Configuration")
+    parser.add_argument('--seed', default=1, type=int)
     parser.add_argument(
         "--exp_name",
         type=str,
@@ -248,7 +273,10 @@ if __name__ == "__main__":
         help="Finetuning batch size",
     )
     config = parser.parse_args()
-
+    
+    # Set Manual Seed
+    set_random_seed(config.seed)
+    
     # All backbone sizes and configurations
     backbones = {
         "small": "vits14_reg",
