@@ -118,11 +118,14 @@ class DINOV2EncoderLoRA(nn.Module):
             )
             logits = self.decoder(feature)
 
+        # For Classification
         else:
+            # Go through model forward
             feature = self.encoder.forward_features(x)
-            # get the patch embeddings - so we exclude the CLS token
-            patch_embeddings = feature["x_norm_patchtokens"]
-            logits = self.decoder(patch_embeddings)
+            # Get cls_token
+            cls_token_extracted = feature["x_norm_clstoken"]
+            # Go through model classification head(linear)
+            logits = self.decoder(cls_token_extracted)
 
         # Used for Segmentation
         # logits = F.interpolate(
