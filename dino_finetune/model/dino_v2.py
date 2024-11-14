@@ -60,14 +60,9 @@ class DINOV2EncoderLoRA(nn.Module):
                 patch_w=int(img_dim[1] / encoder.patch_size),
                 n_classes=n_classes,
             )
+        # Classification Head
         else:
-            self.decoder = LinearClassifier(
-                embed_dim=emb_dim,
-                out_dim=int(img_dim[0] / encoder.patch_size),
-                n_classes=n_classes,
-                layers=4,
-                pretrained=False,
-            )
+            self.decoder = nn.Linear(emb_dim, n_classes)
 
         # Add LoRA layers to the encoder
         if self.use_lora:
